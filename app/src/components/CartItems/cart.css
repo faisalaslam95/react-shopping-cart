@@ -28,3 +28,12 @@
 .right{
     text-align: right;
 }
+.form-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid;
+}
+.form-control {
+    display: flex;
+    justify-content: space-between;
+}

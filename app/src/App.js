@@ -2,11 +2,14 @@ import data from './data'
 import { useState } from 'react';
 import Products from './components/Products/Products'
 import Filter from './components/Filter/Filter';
-import CartItems from './components/CartItems/Cart';
+import Cart from './components/CartItems/Cart';
 
 function App() {
   const [products, setProducts] = useState(data.products)
-  const [cartItems, setCartItems] = useState([])
+  const [cartItems, setCartItems] = useState( localStorage.getItem('cartItems') ?
+                                              JSON.parse(localStorage.getItem('cartItems')) :
+                                              []
+                                            )
   const [size, setSize] = useState('')
   const [sort, setSort] = useState('')
 
@@ -43,8 +46,7 @@ function App() {
     !alreadyInCart && cart.push({...product, count: 1}) 
     
     setCartItems(cart);
-    console.log(cart)
-    console.log(cartItems)
+    localStorage.setItem('cartItems', JSON.stringify(cartItems))
   }
 
   const removeFromCart = (product) => {
@@ -53,6 +55,11 @@ function App() {
         item._id !== product._id
       ))
     )
+    localStorage.setItem('cartItems', JSON.stringify(cartItems))
+  }
+
+  const createOrder = ({email, name , address}) => {
+    console.log(email)
   }
 
   return (
@@ -76,7 +83,11 @@ function App() {
             />
           </div>
           <div className="sidebar">
-            <CartItems cartItems={cartItems} removeFromCart={removeFromCart}/>
+            <Cart 
+              cartItems={cartItems} 
+              removeFromCart={removeFromCart}
+              createOrder={createOrder}  
+              />
           </div>
         </div>
       </main>

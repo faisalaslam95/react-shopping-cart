@@ -1,8 +1,13 @@
-
+import {useState} from 'react'
 import CartItem from './CartItem'
 import './cart.css'
+import Checkout from './Checkout'
 
-const CartItems = ({cartItems, removeFromCart}) => {
+const CartItems = ({cartItems, removeFromCart, createOrder}) => {
+    const [showCheckout, setShowCheckout] = useState(false)
+
+    
+
     return (
         <div>
            {
@@ -31,9 +36,18 @@ const CartItems = ({cartItems, removeFromCart}) => {
                     Total: { ' ' }
                     {cartItems.reduce((a,b) => a + b.price * b.count) , 0}
                     </div>
-                    <button className='button primary'>Proceed</button>    
+                    <button 
+                        className='button primary'
+                        onClick={()=> setShowCheckout(true)}
+                    >
+                    Proceed
+                    </button>    
                </div>
-               ) }
+               ) 
+               }
+               {
+                showCheckout && <Checkout createOrder={createOrder}/>
+               }
         </div>
     )
 }
