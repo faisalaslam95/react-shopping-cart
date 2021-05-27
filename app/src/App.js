@@ -2,9 +2,14 @@ import data from './data'
 import { useState } from 'react';
 import Products from './components/Products/Products'
 import Filter from './components/Filter/Filter';
+import Cart from './components/CartItems/Cart';
 
 function App() {
   const [products, setProducts] = useState(data.products)
+  const [cartItems, setCartItems] = useState( localStorage.getItem('cartItems') ?
+                                              JSON.parse(localStorage.getItem('cartItems')) :
+                                              []
+                                            )
   const [size, setSize] = useState('')
   const [sort, setSort] = useState('')
 
@@ -28,6 +33,35 @@ function App() {
     setProducts(data.products.filter(product => product.availableSizes.indexOf(size)>0))
   }
 
+  const addToCart = (product) => {
+    let alreadyInCart = false
+    const cart = cartItems.slice();
+    cart.map(item => {
+      if(item._id === product._id) {
+      item.count++  
+      alreadyInCart = true
+      }
+    })
+
+    !alreadyInCart && cart.push({...product, count: 1}) 
+    
+    setCartItems(cart);
+    localStorage.setItem('cartItems', JSON.stringify(cartItems))
+  }
+
+  const removeFromCart = (product) => {
+    setCartItems(
+      cartItems.filter(item => (
+        item._id !== product._id
+      ))
+    )
+    localStorage.setItem('cartItems', JSON.stringify(cartItems))
+  }
+
+  const createOrder = ({email, name , address}) => {
+    console.log(email)
+  }
+
   return (
     <div className="App grid-container">
       <header className="app-header">
@@ -43,10 +77,17 @@ function App() {
               sortProducts={sortProducts}
               filterProducts={filterProducts}
             />
-            <Products products={products} />
+            <Products 
+              products={products}
+              addToCart={addToCart}
+            />
           </div>
           <div className="sidebar">
-            Cart Items
+            <Cart 
+              cartItems={cartItems} 
+              removeFromCart={removeFromCart}
+              createOrder={createOrder}  
+              />
           </div>
         </div>
       </main>
