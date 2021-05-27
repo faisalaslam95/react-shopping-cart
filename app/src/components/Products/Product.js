@@ -1,6 +1,6 @@
 
 
-const Product = ({product}) => {
+const Product = ({product, addToCart}) => {
     return (
         <div className = 'product-container'>
             <div className="product">
@@ -10,7 +10,9 @@ const Product = ({product}) => {
                 </a>
                 <div className="product-price">
                     <div className="product-price">${product.price}</div>
-                    <button className='button primary'>Add to Cart</button>
+                    <button className='button primary' onClick={() => addToCart(product)}>
+                        Add to Cart
+                    </button>
                 </div>
             </div>
         </div>
